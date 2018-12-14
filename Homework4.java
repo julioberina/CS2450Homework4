@@ -9,6 +9,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -52,7 +53,8 @@ public class Homework4 extends Application
 		xAxis.setOnAction(event -> { currentAxis = "X"; });
 		yAxis.setOnAction(event -> { currentAxis = "Y"; });
 		zAxis.setOnAction(event -> { currentAxis = "Z"; });
-		HBox axisBox = new HBox(5, xAxis, yAxis, zAxis);
+		HBox axisButtons = new HBox(5, xAxis, yAxis, zAxis);
+		VBox axisBox = new VBox(5, axis, axisButtons);
 
 		Label translateLabel = new Label("Translation:");
 		Button plus = new Button("+");
@@ -66,6 +68,7 @@ public class Homework4 extends Application
 
 		Label scaleLabel = new Label("Scale active shape");
 		Slider scaleSlider = new Slider(0, 3, 0.5);
+		VBox scaleBox = new VBox(5, scaleLabel, scaleSlider);
 
 		Label switchColor = new Label("Change active shape color:");
 		Button redColor = new Button("Red");
@@ -77,13 +80,18 @@ public class Homework4 extends Application
 		Button redSceneColor = new Button("Red");
 		Button greenSceneColor = new Button("Green");
 		Button blueSceneColor = new Button("Blue");
-		VBox subSceneBox = new VBox(5, redSceneColor, greenSceneColor, blueSceneColor);
+		VBox subSceneBox = new VBox(5, subSceneColor, redSceneColor, greenSceneColor, blueSceneColor);
 
 		TextField shapeField = new TextField();
 		Button addShape = new Button("Add Shape");
 		VBox shapeBox = new VBox(5, shapeField, addShape);
 
-		Scene scene = new Scene(menuBar, 1000, 700);
+		VBox controlSet = new VBox(30, axisBox, transBox, rotateBox, scaleBox, switchBox, subSceneBox, shapeBox);
+		controlSet.setAlignment(Pos.CENTER);
+		HBox sceneBox = new HBox(1, shapeScene, controlSet);
+		VBox mainBox = new VBox(1, menuBar, sceneBox);
+
+		Scene scene = new Scene(mainBox, 1000, 700);
 
 		// Set the stage title
 		primaryStage.setTitle("Homework 4");
