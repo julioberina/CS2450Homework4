@@ -8,6 +8,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -48,10 +49,39 @@ public class Homework4 extends Application
 		Button xAxis = new Button("X-Axis");
 		Button yAxis = new Button("Y-Axis");
 		Button zAxis = new Button("Z-Axis");
-		xAxis.setOnAction(event -> { currentAxis = "X" });
-		yAxis.setOnAction(event -> { currentAxis = "Y" });
-		zAxis.setOnAction(event -> { currentAxis = "Z" });
-		HBox axisBox = new HBox(5, xAxis, yAxis, zAxis)
+		xAxis.setOnAction(event -> { currentAxis = "X"; });
+		yAxis.setOnAction(event -> { currentAxis = "Y"; });
+		zAxis.setOnAction(event -> { currentAxis = "Z"; });
+		HBox axisBox = new HBox(5, xAxis, yAxis, zAxis);
+
+		Label translateLabel = new Label("Translation:");
+		Button plus = new Button("+");
+		Button minus = new Button("-");
+		HBox transButtons = new HBox(5, plus, minus);
+		VBox transBox = new VBox(5, translateLabel, transButtons);
+
+		Label rotateLabel = new Label("Rotation (degrees):");
+		Slider degreeSlider = new Slider(0, 360, 1);
+		VBox rotateBox = new VBox(5, rotateLabel, degreeSlider);
+
+		Label scaleLabel = new Label("Scale active shape");
+		Slider scaleSlider = new Slider(0, 3, 0.5);
+
+		Label switchColor = new Label("Change active shape color:");
+		Button redColor = new Button("Red");
+		Button greenColor = new Button("Green");
+		Button blueColor = new Button("Blue");
+		VBox switchBox = new VBox(5, switchColor, redColor, greenColor, blueColor);
+
+		Label subSceneColor = new Label("Change SubScene background color:");
+		Button redSceneColor = new Button("Red");
+		Button greenSceneColor = new Button("Green");
+		Button blueSceneColor = new Button("Blue");
+		VBox subSceneBox = new VBox(5, redSceneColor, greenSceneColor, blueSceneColor);
+
+		TextField shapeField = new TextField();
+		Button addShape = new Button("Add Shape");
+		VBox shapeBox = new VBox(5, shapeField, addShape);
 
 		Scene scene = new Scene(menuBar, 1000, 700);
 
