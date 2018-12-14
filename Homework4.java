@@ -10,15 +10,14 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.Sphere;
+import javafx.scene.shape.Box;
+import javafx.scene.shape.Cylinder;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.Group;
 import javafx.geometry.Pos;
-import javafx.animation.FillTransition;
-import javafx.util.Duration;
-import java.util.List;
-import java.util.ArrayList;
 
 public class Homework4 extends Application
 {
@@ -34,8 +33,6 @@ public class Homework4 extends Application
 	@Override
 	public void start(Stage primaryStage)
 	{
-		FillTransition turnBlue = new FillTransition(new Duration(500));
-
 		MenuBar menuBar = new MenuBar();
 		Menu fileMenu = new Menu("File");
 		MenuItem openFile = new MenuItem("Open");
@@ -62,13 +59,60 @@ public class Homework4 extends Application
 		HBox transButtons = new HBox(5, plus, minus);
 		VBox transBox = new VBox(5, translateLabel, transButtons);
 
+		plus.setOnAction(event -> {
+			if (selectedShape != null) {
+				if (currentAxis.equals("X"))
+					selectedShape.setTranslateX(1.0);
+				else if (currentAxis.equals("Y"))
+					selectedShape.setTranslateY(1.0);
+				else if (currentAxis.equals("Z"))
+					selectedShape.setTranslateZ(1.0);
+			}
+		});
+		minus.setOnAction(event -> {
+			if (selectedShape != null) {
+				if (currentAxis.equals("X"))
+					selectedShape.setTranslateX(-1.0);
+				else if (currentAxis.equals("Y"))
+					selectedShape.setTranslateY(-1.0);
+				else if (currentAxis.equals("Z"))
+					selectedShape.setTranslateZ(-1.0);
+			}
+		});
+
 		Label rotateLabel = new Label("Rotation (degrees):");
 		Slider degreeSlider = new Slider(0, 360, 1);
 		VBox rotateBox = new VBox(5, rotateLabel, degreeSlider);
 
+		degreeSlider.setOnDragOver(event -> {
+			if (selectedShape != null) {
+				if (currentAxis.equals("X"))
+					selectedShape.setRotationAxis(Rotate.X_AXIS);
+				else if (currentAxis.equals("Y"))
+					selectedShape.setRotationAxis(Rotate.Y_AXIS);
+				else if (currentAxis.equals("Z"))
+					selectedShape.setRotationAxis(Rotate.Z_AXIS);
+				else
+					return;
+
+				selectedShape.setRotate(degreeSlider.getValue());
+			}
+		});
+
 		Label scaleLabel = new Label("Scale active shape");
 		Slider scaleSlider = new Slider(0, 3, 0.5);
 		VBox scaleBox = new VBox(5, scaleLabel, scaleSlider);
+
+		scaleSlider.setOnDragOver(event -> {
+			if (selectedShape != null) {
+				if (currentAxis.equals("X"))
+					selectedShape.setScaleX(scaleSlider.getValue());
+				else if (currentAxis.equals("Y"))
+					selectedShape.setScaleY(scaleSlider.getValue());
+				else if (currentAxis.equals("Z"))
+					selectedShape.setScaleZ(scaleSlider.getValue());
+			}
+		});
 
 		Label switchColor = new Label("Change active shape color:");
 		Button redColor = new Button("Red");
@@ -76,15 +120,62 @@ public class Homework4 extends Application
 		Button blueColor = new Button("Blue");
 		VBox switchBox = new VBox(5, switchColor, redColor, greenColor, blueColor);
 
+		redColor.setOnAction(event -> {
+			if (selectedShape != null) {
+				selectedShape.setStyle("-fx-background-color: red");
+			}
+		});
+		greenColor.setOnAction(event -> {
+			if (selectedShape != null) {
+				selectedShape.setStyle("-fx-background-color: green");
+			}
+		});
+		blueColor.setOnAction(event -> {
+			if (selectedShape != null) {
+				selectedShape.setStyle("-fx-background-color: blue");
+			}
+		});
+
 		Label subSceneColor = new Label("Change SubScene background color:");
 		Button redSceneColor = new Button("Red");
 		Button greenSceneColor = new Button("Green");
 		Button blueSceneColor = new Button("Blue");
 		VBox subSceneBox = new VBox(5, subSceneColor, redSceneColor, greenSceneColor, blueSceneColor);
 
+		redSceneColor.setOnAction(event -> { shapeScene.setFill(Color.RED); });
+		greenSceneColor.setOnAction(event -> { shapeScene.setFill(Color.GREEN); });
+		blueSceneColor.setOnAction(event -> { shapeScene.setFill(Color.BLUE); });
+
 		TextField shapeField = new TextField();
 		Button addShape = new Button("Add Shape");
 		VBox shapeBox = new VBox(5, shapeField, addShape);
+
+		addShape.setOnAction(event -> {
+			String str = shapeField.getText();
+			String[] data = str.split(" ");
+
+			if (data.length == 1) {
+				double r = Double.parseDouble(data[0]);
+				Sphere shape = new Sphere(r);
+				shape.setOnMouseClicked(event -> { selectedShape = shape; });
+				shapeGroup.getChildren().add(shape);
+			}
+			else if (data.length == 2) {
+				double r = Double.parseDouble(data[0]);
+				double h = Double.parseDouble(data[1]);
+				Cylinder shape = new Cylinder(r, h);
+				shape.setOnMouseClicked(event -> { selectedShape = shape; });
+				shapeGroup.getChildren().add(shape);
+			}
+			else if (data.length == 3) {
+				double w = Double.parseDouble(data[0]);
+				double h = Double.parseDouble(data[1]);
+				double d = Double.parseDouble(data[2]);
+				Box shape = new Box(w, h, d);
+				shape.setOnMouseClicked(event -> { selectedShape = shape; });
+				shapeGroup.getChildren().add(shape);
+			}
+		});
 
 		VBox controlSet = new VBox(30, axisBox, transBox, rotateBox, scaleBox, switchBox, subSceneBox, shapeBox);
 		controlSet.setAlignment(Pos.CENTER);
