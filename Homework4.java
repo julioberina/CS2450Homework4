@@ -16,6 +16,10 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 import javafx.scene.Group;
 import javafx.geometry.Pos;
 
@@ -62,21 +66,21 @@ public class Homework4 extends Application
 		plus.setOnAction(event -> {
 			if (selectedShape != null) {
 				if (currentAxis.equals("X"))
-					selectedShape.setTranslateX(1.0);
+					selectedShape.getTransforms().add(new Translate(10, 0, 0));
 				else if (currentAxis.equals("Y"))
-					selectedShape.setTranslateY(1.0);
+					selectedShape.getTransforms().add(new Translate(0, 10, 0));
 				else if (currentAxis.equals("Z"))
-					selectedShape.setTranslateZ(1.0);
+					selectedShape.getTransforms().add(new Translate(0, 0, 10));
 			}
 		});
 		minus.setOnAction(event -> {
 			if (selectedShape != null) {
 				if (currentAxis.equals("X"))
-					selectedShape.setTranslateX(-1.0);
+					selectedShape.getTransforms().add(new Translate(-10, 0, 0));
 				else if (currentAxis.equals("Y"))
-					selectedShape.setTranslateY(-1.0);
+					selectedShape.getTransforms().add(new Translate(0, -10, 0));
 				else if (currentAxis.equals("Z"))
-					selectedShape.setTranslateZ(-1.0);
+					selectedShape.getTransforms().add(new Translate(0, 0, -10));
 			}
 		});
 
@@ -84,33 +88,42 @@ public class Homework4 extends Application
 		Slider degreeSlider = new Slider(0, 360, 1);
 		VBox rotateBox = new VBox(5, rotateLabel, degreeSlider);
 
-		degreeSlider.setOnDragOver(event -> {
+		degreeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
 			if (selectedShape != null) {
 				if (currentAxis.equals("X"))
-					selectedShape.setRotationAxis(Rotate.X_AXIS);
+					selectedShape.getTransforms().add(new Rotate(newVal.doubleValue(), Rotate.X_AXIS));
 				else if (currentAxis.equals("Y"))
-					selectedShape.setRotationAxis(Rotate.Y_AXIS);
+					selectedShape.getTransforms().add(new Rotate(newVal.doubleValue(), Rotate.Y_AXIS));
 				else if (currentAxis.equals("Z"))
-					selectedShape.setRotationAxis(Rotate.Z_AXIS);
+					selectedShape.getTransforms().add(new Rotate(newVal.doubleValue(), Rotate.Z_AXIS));
 				else
 					return;
-
-				selectedShape.setRotate(degreeSlider.getValue());
 			}
 		});
 
 		Label scaleLabel = new Label("Scale active shape");
-		Slider scaleSlider = new Slider(0, 3, 0.5);
+		Slider scaleSlider = new Slider(0.9, 1.1, 0.01);
 		VBox scaleBox = new VBox(5, scaleLabel, scaleSlider);
 
-		scaleSlider.setOnDragOver(event -> {
+		scaleSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
 			if (selectedShape != null) {
-				if (currentAxis.equals("X"))
-					selectedShape.setScaleX(scaleSlider.getValue());
-				else if (currentAxis.equals("Y"))
-					selectedShape.setScaleY(scaleSlider.getValue());
-				else if (currentAxis.equals("Z"))
-					selectedShape.setScaleZ(scaleSlider.getValue());
+				if (currentAxis.equals("X")) {
+					Scale scale = new Scale();
+					scale.setX(newVal.doubleValue());
+					selectedShape.getTransforms().add(scale);
+				}
+				else if (currentAxis.equals("Y")) {
+					Scale scale = new Scale();
+					scale.setY(newVal.doubleValue());
+					selectedShape.getTransforms().add(scale);
+				}
+				else if (currentAxis.equals("Z")) {
+					Scale scale = new Scale();
+					scale.setZ(newVal.doubleValue());
+					selectedShape.getTransforms().add(scale);
+				}
+				else
+					return;
 			}
 		});
 
@@ -122,17 +135,17 @@ public class Homework4 extends Application
 
 		redColor.setOnAction(event -> {
 			if (selectedShape != null) {
-				selectedShape.setStyle("-fx-background-color: red");
+				((PhongMaterial)selectedShape.getMaterial()).setDiffuseColor(Color.RED);
 			}
 		});
 		greenColor.setOnAction(event -> {
 			if (selectedShape != null) {
-				selectedShape.setStyle("-fx-background-color: green");
+				((PhongMaterial)selectedShape.getMaterial()).setDiffuseColor(Color.GREEN);
 			}
 		});
 		blueColor.setOnAction(event -> {
 			if (selectedShape != null) {
-				selectedShape.setStyle("-fx-background-color: blue");
+				((PhongMaterial)selectedShape.getMaterial()).setDiffuseColor(Color.BLUE);
 			}
 		});
 
@@ -157,23 +170,29 @@ public class Homework4 extends Application
 			if (data.length == 1) {
 				double r = Double.parseDouble(data[0]);
 				Sphere shape = new Sphere(r);
-				shape.setOnMouseClicked(event -> { selectedShape = shape; });
+				shape.setMaterial(new PhongMaterial());
+				shape.setOnMouseClicked(evt -> { selectedShape = shape; });
 				shapeGroup.getChildren().add(shape);
+				selectedShape = shape;
 			}
 			else if (data.length == 2) {
 				double r = Double.parseDouble(data[0]);
 				double h = Double.parseDouble(data[1]);
 				Cylinder shape = new Cylinder(r, h);
-				shape.setOnMouseClicked(event -> { selectedShape = shape; });
+				shape.setMaterial(new PhongMaterial());
+				shape.setOnMouseClicked(evt -> { selectedShape = shape; });
 				shapeGroup.getChildren().add(shape);
+				selectedShape = shape;
 			}
 			else if (data.length == 3) {
 				double w = Double.parseDouble(data[0]);
 				double h = Double.parseDouble(data[1]);
 				double d = Double.parseDouble(data[2]);
 				Box shape = new Box(w, h, d);
-				shape.setOnMouseClicked(event -> { selectedShape = shape; });
+				shape.setMaterial(new PhongMaterial());
+				shape.setOnMouseClicked(evt -> { selectedShape = shape; });
 				shapeGroup.getChildren().add(shape);
+				selectedShape = shape;
 			}
 		});
 
