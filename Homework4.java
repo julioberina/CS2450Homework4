@@ -329,19 +329,19 @@ public class Homework4 extends Application
 					else {
 						if (currentInt == 1) {
 							Sphere sphere = new Sphere(ois.readDouble());
-							sphere.setTranslateX(ois.readDouble());
-							sphere.setTranslateY(ois.readDouble());
-							sphere.setTranslateZ(ois.readDouble());
+							Translate t = new Translate(ois.readDouble(), ois.readDouble(), ois.readDouble());
+							sphere.getTransforms().add(t);
 
 							currentInt = ois.readInt();
-							if (currentInt == 1)			sphere.setRotationAxis(Rotate.X_AXIS);
-							else if (currentInt == 2)	sphere.setRotationAxis(Rotate.Y_AXIS);
-							else if (currentInt == 3)	sphere.setRotationAxis(Rotate.Z_AXIS);
-							sphere.setRotate(ois.readDouble());
+							Rotate r = new Rotate();
+							if (currentInt == 1)			r.setAxis(Rotate.X_AXIS);
+							else if (currentInt == 2)	r.setAxis(Rotate.Y_AXIS);
+							else if (currentInt == 3)	r.setAxis(Rotate.Z_AXIS);
+							r.setAngle(ois.readDouble());
+							sphere.getTransforms().add(r);
 
-							sphere.setScaleX(ois.readDouble());
-							sphere.setScaleY(ois.readDouble());
-							sphere.setScaleZ(ois.readDouble());
+							Scale s = new Scale(ois.readDouble(), ois.readDouble(), ois.readDouble());
+							sphere.getTransforms().add(s);
 
 							currentInt = ois.readInt();
 							if (currentInt > 0) {
@@ -352,23 +352,24 @@ public class Homework4 extends Application
 								sphere.setMaterial(pm);
 							}
 
+							sphere.setOnMouseClicked(evt -> { selectedShape = sphere; });
 							shapeGroup.getChildren().add(sphere);
 						}
 						else if (currentInt == 2) {
 							Cylinder cylinder = new Cylinder(ois.readDouble(), ois.readDouble());
-							cylinder.setTranslateX(ois.readDouble());
-							cylinder.setTranslateY(ois.readDouble());
-							cylinder.setTranslateZ(ois.readDouble());
+							Translate t = new Translate(ois.readDouble(), ois.readDouble(), ois.readDouble());
+							cylinder.getTransforms().add(t);
 
 							currentInt = ois.readInt();
-							if (currentInt == 1)			cylinder.setRotationAxis(Rotate.X_AXIS);
-							else if (currentInt == 2)	cylinder.setRotationAxis(Rotate.Y_AXIS);
-							else if (currentInt == 3)	cylinder.setRotationAxis(Rotate.Z_AXIS);
-							cylinder.setRotate(ois.readDouble());
+							Rotate r = new Rotate();
+							if (currentInt == 1)			r.setAxis(Rotate.X_AXIS);
+							else if (currentInt == 2)	r.setAxis(Rotate.Y_AXIS);
+							else if (currentInt == 3)	r.setAxis(Rotate.Z_AXIS);
+							r.setAngle(ois.readDouble());
+							cylinder.getTransforms().add(r);
 
-							cylinder.setScaleX(ois.readDouble());
-							cylinder.setScaleY(ois.readDouble());
-							cylinder.setScaleZ(ois.readDouble());
+							Scale s = new Scale(ois.readDouble(), ois.readDouble(), ois.readDouble());
+							cylinder.getTransforms().add(s);
 
 							currentInt = ois.readInt();
 							if (currentInt > 0) {
@@ -379,23 +380,24 @@ public class Homework4 extends Application
 								cylinder.setMaterial(pm);
 							}
 
+							cylinder.setOnMouseClicked(evt -> { selectedShape = cylinder; });
 							shapeGroup.getChildren().add(cylinder);
 						}
 						else if (currentInt == 3) {
 							Box box = new Box(ois.readDouble(), ois.readDouble(), ois.readDouble());
-							box.setTranslateX(ois.readDouble());
-							box.setTranslateY(ois.readDouble());
-							box.setTranslateZ(ois.readDouble());
+							Translate t = new Translate(ois.readDouble(), ois.readDouble(), ois.readDouble());
+							box.getTransforms().add(t);
 
 							currentInt = ois.readInt();
-							if (currentInt == 1)			box.setRotationAxis(Rotate.X_AXIS);
-							else if (currentInt == 2)	box.setRotationAxis(Rotate.Y_AXIS);
-							else if (currentInt == 3)	box.setRotationAxis(Rotate.Z_AXIS);
-							box.setRotate(ois.readDouble());
+							Rotate r = new Rotate();
+							if (currentInt == 1)			r.setAxis(Rotate.X_AXIS);
+							else if (currentInt == 2)	r.setAxis(Rotate.Y_AXIS);
+							else if (currentInt == 3)	r.setAxis(Rotate.Z_AXIS);
+							r.setAngle(ois.readDouble());
+							box.getTransforms().add(r);
 
-							box.setScaleX(ois.readDouble());
-							box.setScaleY(ois.readDouble());
-							box.setScaleZ(ois.readDouble());
+							Scale s = new Scale(ois.readDouble(), ois.readDouble(), ois.readDouble());
+							box.getTransforms().add(s);
 
 							currentInt = ois.readInt();
 							if (currentInt > 0) {
@@ -406,6 +408,7 @@ public class Homework4 extends Application
 								box.setMaterial(pm);
 							}
 
+							box.setOnMouseClicked(evt -> { selectedShape = box; });
 							shapeGroup.getChildren().add(box);
 						}
 					}
