@@ -25,6 +25,8 @@ import javafx.scene.Group;
 import javafx.geometry.Pos;
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Homework4 extends Application
@@ -208,12 +210,9 @@ public class Homework4 extends Application
 	                    new FileOutputStream(System.getProperty("user.dir") + "/shapedata.dat")
 	            );
 
-				if (shapeScene.getFill() == Color.RED)
-					oos.writeInt(1);
-				else if (shapeScene.getFill() == Color.GREEN)
-					oos.writeInt(2);
-				else if (shapeScene.getFill() == Color.BLUE)
-					oos.writeInt(3);
+				if (shapeScene.getFill() == Color.RED)		oos.writeInt(1);
+				else if (shapeScene.getFill() == Color.GREEN)		oos.writeInt(2);
+				else if (shapeScene.getFill() == Color.BLUE)		oos.writeInt(3);
 
 				for (Node shape: shapeGroup.getChildren()) {
 					if (shape instanceof Sphere) {
@@ -301,6 +300,119 @@ public class Homework4 extends Application
 
 				oos.writeInt(10000); // "close" flag
 				oos.close();
+				System.out.println("Data saved");
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+
+		loadBtn.setOnAction(event -> {
+			try {
+				ObjectInputStream ois = new ObjectInputStream(
+								new FileInputStream(System.getProperty("user.dir") + "/shapedata.dat")
+				);
+
+				boolean eofReached = false;
+				int currentInt = ois.readInt();
+
+				if (currentInt == 1)	shapeScene.setFill(Color.RED);
+				else if (currentInt == 2)	shapeScene.setFill(Color.GREEN);
+				else if (currentInt == 3)	shapeScene.setFill(Color.BLUE);
+
+				shapeGroup.getChildren().clear();
+
+				while (eofReached == false) {
+					currentInt = ois.readInt();
+
+					if (currentInt == 10000)		eofReached = true;
+					else {
+						if (currentInt == 1) {
+							Sphere sphere = new Sphere(ois.readDouble());
+							sphere.setTranslateX(ois.readDouble());
+							sphere.setTranslateY(ois.readDouble());
+							sphere.setTranslateZ(ois.readDouble());
+
+							currentInt = ois.readInt();
+							if (currentInt == 1)			sphere.setRotationAxis(Rotate.X_AXIS);
+							else if (currentInt == 2)	sphere.setRotationAxis(Rotate.Y_AXIS);
+							else if (currentInt == 3)	sphere.setRotationAxis(Rotate.Z_AXIS);
+							sphere.setRotate(ois.readDouble());
+
+							sphere.setScaleX(ois.readDouble());
+							sphere.setScaleY(ois.readDouble());
+							sphere.setScaleZ(ois.readDouble());
+
+							currentInt = ois.readInt();
+							if (currentInt > 0) {
+								PhongMaterial pm = new PhongMaterial();
+								if (currentInt == 1)			pm.setDiffuseColor(Color.RED);
+								else if (currentInt == 2)	pm.setDiffuseColor(Color.GREEN);
+								else if (currentInt == 3)	pm.setDiffuseColor(Color.BLUE);
+								sphere.setMaterial(pm);
+							}
+
+							shapeGroup.getChildren().add(sphere);
+						}
+						else if (currentInt == 2) {
+							Cylinder cylinder = new Cylinder(ois.readDouble(), ois.readDouble());
+							cylinder.setTranslateX(ois.readDouble());
+							cylinder.setTranslateY(ois.readDouble());
+							cylinder.setTranslateZ(ois.readDouble());
+
+							currentInt = ois.readInt();
+							if (currentInt == 1)			cylinder.setRotationAxis(Rotate.X_AXIS);
+							else if (currentInt == 2)	cylinder.setRotationAxis(Rotate.Y_AXIS);
+							else if (currentInt == 3)	cylinder.setRotationAxis(Rotate.Z_AXIS);
+							cylinder.setRotate(ois.readDouble());
+
+							cylinder.setScaleX(ois.readDouble());
+							cylinder.setScaleY(ois.readDouble());
+							cylinder.setScaleZ(ois.readDouble());
+
+							currentInt = ois.readInt();
+							if (currentInt > 0) {
+								PhongMaterial pm = new PhongMaterial();
+								if (currentInt == 1)			pm.setDiffuseColor(Color.RED);
+								else if (currentInt == 2)	pm.setDiffuseColor(Color.GREEN);
+								else if (currentInt == 3)	pm.setDiffuseColor(Color.BLUE);
+								cylinder.setMaterial(pm);
+							}
+
+							shapeGroup.getChildren().add(cylinder);
+						}
+						else if (currentInt == 3) {
+							Box box = new Box(ois.readDouble(), ois.readDouble(), ois.readDouble());
+							box.setTranslateX(ois.readDouble());
+							box.setTranslateY(ois.readDouble());
+							box.setTranslateZ(ois.readDouble());
+
+							currentInt = ois.readInt();
+							if (currentInt == 1)			box.setRotationAxis(Rotate.X_AXIS);
+							else if (currentInt == 2)	box.setRotationAxis(Rotate.Y_AXIS);
+							else if (currentInt == 3)	box.setRotationAxis(Rotate.Z_AXIS);
+							box.setRotate(ois.readDouble());
+
+							box.setScaleX(ois.readDouble());
+							box.setScaleY(ois.readDouble());
+							box.setScaleZ(ois.readDouble());
+
+							currentInt = ois.readInt();
+							if (currentInt > 0) {
+								PhongMaterial pm = new PhongMaterial();
+								if (currentInt == 1)			pm.setDiffuseColor(Color.RED);
+								else if (currentInt == 2)	pm.setDiffuseColor(Color.GREEN);
+								else if (currentInt == 3)	pm.setDiffuseColor(Color.BLUE);
+								box.setMaterial(pm);
+							}
+
+							shapeGroup.getChildren().add(box);
+						}
+					}
+				}
+
+				ois.close();
+				System.out.println("Data loaded");
 			}
 			catch (IOException e) {
 				e.printStackTrace();
