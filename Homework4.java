@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,6 +23,9 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.scene.Group;
 import javafx.geometry.Pos;
+import java.io.ObjectOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class Homework4 extends Application
 {
@@ -161,7 +165,9 @@ public class Homework4 extends Application
 
 		TextField shapeField = new TextField();
 		Button addShape = new Button("Add Shape");
-		VBox shapeBox = new VBox(5, shapeField, addShape);
+		Button saveBtn = new Button("Save");
+		Button loadBtn = new Button("Load");
+		VBox shapeBox = new VBox(5, shapeField, addShape, saveBtn, loadBtn);
 
 		addShape.setOnAction(event -> {
 			String str = shapeField.getText();
@@ -193,6 +199,111 @@ public class Homework4 extends Application
 				shape.setOnMouseClicked(evt -> { selectedShape = shape; });
 				shapeGroup.getChildren().add(shape);
 				selectedShape = shape;
+			}
+		});
+
+		saveBtn.setOnAction(event -> {
+			try {
+				ObjectOutputStream oos = new ObjectOutputStream(
+	                    new FileOutputStream(System.getProperty("user.dir") + "/shapedata.dat")
+	            );
+
+				if (shapeScene.getFill() == Color.RED)
+					oos.writeInt(1);
+				else if (shapeScene.getFill() == Color.GREEN)
+					oos.writeInt(2);
+				else if (shapeScene.getFill() == Color.BLUE)
+					oos.writeInt(3);
+
+				for (Node shape: shapeGroup.getChildren()) {
+					if (shape instanceof Sphere) {
+						oos.writeInt(1);
+						Sphere sphere = (Sphere)shape;
+						oos.writeDouble(sphere.getRadius());
+
+						oos.writeDouble(sphere.getTranslateX());
+						oos.writeDouble(sphere.getTranslateY());
+						oos.writeDouble(sphere.getTranslateZ());
+
+						if (sphere.getRotationAxis() == Rotate.X_AXIS)	oos.writeInt(1);
+						else if (sphere.getRotationAxis() == Rotate.Y_AXIS)	oos.writeInt(2);
+						else if (sphere.getRotationAxis() == Rotate.Z_AXIS)	oos.writeInt(3);
+
+						oos.writeDouble(sphere.getRotate());
+						oos.writeDouble(sphere.getScaleX());
+						oos.writeDouble(sphere.getScaleY());
+						oos.writeDouble(sphere.getScaleZ());
+
+						if (sphere.getMaterial() == null)		oos.writeInt(0);
+						else {
+							PhongMaterial pm = (PhongMaterial)sphere.getMaterial();
+							if (pm.getDiffuseColor() == Color.RED)	oos.writeInt(1);
+							else if (pm.getDiffuseColor() == Color.GREEN)		oos.writeInt(2);
+							else if (pm.getDiffuseColor() == Color.BLUE)		oos.writeInt(3);
+						}
+					}
+					else if (shape instanceof Cylinder) {
+						oos.writeInt(2);
+						Cylinder cylinder = (Cylinder)shape;
+						oos.writeDouble(cylinder.getRadius());
+						oos.writeDouble(cylinder.getHeight());
+
+						oos.writeDouble(cylinder.getTranslateX());
+						oos.writeDouble(cylinder.getTranslateY());
+						oos.writeDouble(cylinder.getTranslateZ());
+
+						if (cylinder.getRotationAxis() == Rotate.X_AXIS)	oos.writeInt(1);
+						else if (cylinder.getRotationAxis() == Rotate.Y_AXIS)	oos.writeInt(2);
+						else if (cylinder.getRotationAxis() == Rotate.Z_AXIS)	oos.writeInt(3);
+
+						oos.writeDouble(cylinder.getRotate());
+						oos.writeDouble(cylinder.getScaleX());
+						oos.writeDouble(cylinder.getScaleY());
+						oos.writeDouble(cylinder.getScaleZ());
+
+						if (cylinder.getMaterial() == null)		oos.writeInt(0);
+						else {
+							PhongMaterial pm = (PhongMaterial)cylinder.getMaterial();
+							if (pm.getDiffuseColor() == Color.RED)	oos.writeInt(1);
+							else if (pm.getDiffuseColor() == Color.GREEN)		oos.writeInt(2);
+							else if (pm.getDiffuseColor() == Color.BLUE)		oos.writeInt(3);
+						}
+					}
+					else if (shape instanceof Box) {
+						oos.writeInt(3);
+						Box box = (Box)shape;
+						oos.writeDouble(box.getWidth());
+						oos.writeDouble(box.getHeight());
+						oos.writeDouble(box.getDepth());
+
+						oos.writeDouble(box.getTranslateX());
+						oos.writeDouble(box.getTranslateY());
+						oos.writeDouble(box.getTranslateZ());
+
+						if (box.getRotationAxis() == Rotate.X_AXIS)	oos.writeInt(1);
+						else if (box.getRotationAxis() == Rotate.Y_AXIS)	oos.writeInt(2);
+						else if (box.getRotationAxis() == Rotate.Z_AXIS)	oos.writeInt(3);
+
+						oos.writeDouble(box.getRotate());
+						oos.writeDouble(box.getScaleX());
+						oos.writeDouble(box.getScaleY());
+						oos.writeDouble(box.getScaleZ());
+
+						if (box.getMaterial() == null)		oos.writeInt(0);
+						else {
+							PhongMaterial pm = (PhongMaterial)box.getMaterial();
+							if (pm.getDiffuseColor() == Color.RED)	oos.writeInt(1);
+							else if (pm.getDiffuseColor() == Color.GREEN)		oos.writeInt(2);
+							else if (pm.getDiffuseColor() == Color.BLUE)		oos.writeInt(3);
+						}
+					}
+				}
+
+				oos.writeInt(10000); // "close" flag
+				oos.close();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
 			}
 		});
 
