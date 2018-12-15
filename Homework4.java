@@ -10,6 +10,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.shape.Box;
@@ -28,6 +29,8 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Optional;
+import java.lang.StringBuilder;
 
 public class Homework4 extends Application
 {
@@ -204,8 +207,18 @@ public class Homework4 extends Application
 
 		saveFile.setOnAction(event -> {
 			try {
+				StringBuilder sb = new StringBuilder();
+				TextInputDialog dialog = new TextInputDialog();
+
+				dialog.setTitle("Save a file");
+				dialog.setHeaderText("Enter filename (no extension):");
+				dialog.setContentText("Filename:");
+
+				Optional<String> result = dialog.showAndWait();
+				result.ifPresent(name -> { sb.append(name); });
+
 				ObjectOutputStream oos = new ObjectOutputStream(
-	                    new FileOutputStream(System.getProperty("user.dir") + "/shapedata.dat")
+	                    new FileOutputStream(System.getProperty("user.dir") + "/" + sb.toString() + ".dat")
 	            );
 
 				if (shapeScene.getFill() == Color.RED)		oos.writeInt(1);
@@ -307,8 +320,18 @@ public class Homework4 extends Application
 
 		openFile.setOnAction(event -> {
 			try {
+				StringBuilder sb = new StringBuilder();
+				TextInputDialog dialog = new TextInputDialog();
+
+				dialog.setTitle("Open a file");
+				dialog.setHeaderText("Enter filename (no extension):");
+				dialog.setContentText("Filename:");
+
+				Optional<String> result = dialog.showAndWait();
+				result.ifPresent(name -> { sb.append(name); });
+
 				ObjectInputStream ois = new ObjectInputStream(
-								new FileInputStream(System.getProperty("user.dir") + "/shapedata.dat")
+								new FileInputStream(System.getProperty("user.dir") + "/" + sb.toString() + ".dat")
 				);
 
 				boolean eofReached = false;
