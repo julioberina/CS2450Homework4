@@ -167,9 +167,7 @@ public class Homework4 extends Application
 
 		TextField shapeField = new TextField();
 		Button addShape = new Button("Add Shape");
-		Button saveBtn = new Button("Save");
-		Button loadBtn = new Button("Load");
-		VBox shapeBox = new VBox(5, shapeField, addShape, saveBtn, loadBtn);
+		VBox shapeBox = new VBox(5, shapeField, addShape);
 
 		addShape.setOnAction(event -> {
 			String str = shapeField.getText();
@@ -204,7 +202,7 @@ public class Homework4 extends Application
 			}
 		});
 
-		saveBtn.setOnAction(event -> {
+		saveFile.setOnAction(event -> {
 			try {
 				ObjectOutputStream oos = new ObjectOutputStream(
 	                    new FileOutputStream(System.getProperty("user.dir") + "/shapedata.dat")
@@ -307,7 +305,7 @@ public class Homework4 extends Application
 			}
 		});
 
-		loadBtn.setOnAction(event -> {
+		openFile.setOnAction(event -> {
 			try {
 				ObjectInputStream ois = new ObjectInputStream(
 								new FileInputStream(System.getProperty("user.dir") + "/shapedata.dat")
